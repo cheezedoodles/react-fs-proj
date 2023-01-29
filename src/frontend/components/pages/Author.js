@@ -21,7 +21,7 @@ export class Author extends React.Component {
         <${Header}/>
         <h2>${author.name}</h2>
         <p>${author.bio}</p>
-        <h3>Books<h3>
+        <h3>Books</h3>
         <ul>
           ${author.books.map((book) => 
               html`<li key=${book.id}>${book.title} (${book.year})</li>`
