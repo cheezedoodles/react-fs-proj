@@ -1,6 +1,6 @@
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import React from 'react'
+import react from 'react'
 import reactServer from 'react-dom/server.js'
 import htm from 'htm'
 import fastify from 'fastify'
@@ -9,7 +9,7 @@ import { StaticRouter } from 'react-router-dom'
 import { App } from './frontend/App.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const html = htm.bind(React.createElement)
+const html = htm.bind(react.createElement)
 
 const template = ({ content }) => `<!DOCTYPE html>
 <html>

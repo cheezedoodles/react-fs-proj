@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom'
 import superagent from 'superagent'
 import { Header } from '../Header.js'
 
-
 const html = htm.bind(react.createElement)
 
 export class AuthorsIndex extends react.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       authors: [],
@@ -16,14 +15,14 @@ export class AuthorsIndex extends react.Component {
     }
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     const { body } = await superagent.get('http://localhost:3001/api/authors')
     this.setState({ loading: false, authors: body })
   }
 
   render () {
     if (this.state.loading) {
-      return html`<${Header}/><div>Loading...</div>`
+      return html`<${Header}/><div>Loading ...</div>`
     }
 
     return html`<div>
