@@ -7,6 +7,10 @@ const html = htm.bind(React.createElement)
 
 export class FourOhFour extends React.Component {
     render() {
+      if (this.props.staticContext) {
+        this.props.staticContext.statusCode = 404
+      }
+      
       return html`
         <div>
           <${Header}/>

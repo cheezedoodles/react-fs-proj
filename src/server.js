@@ -4,14 +4,14 @@ import React from 'react'
 import reactServer from 'react-dom/server.js'
 import htm from 'htm'
 import fastify from 'fastify'
-import fastifyStatic from 'fastify-static'
+import fastifyStatic from '@fastify/static'
 import { StaticRouter } from 'react-router-dom'
 import { App } from './frontend/App.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const html = htm.bind(React.createElement)
 
-const template = ({content}) => `<!DOCTYPE html>
+const template = ({ content }) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -32,15 +32,24 @@ server.register(fastifyStatic, {
 
 server.get('*', async (req, reply) => {
   const location = req.raw.originalUrl
-  const serverApp = html`
-    <${StaticRouter} location=${location}>
+  const staticContext = {}
+  const serverApp = html` 
+    <${StaticRouter}
+      location=${location}
+      context=${staticContext}
+    >
       <${App}/>
     </>
   `
   const content = reactServer.renderToString(serverApp)
   const responseHtml = template({ content })
 
-  reply.code(200).type('text/html').send(responseHtml)
+  let code = 200
+  if (staticContext.statusCode) {
+    code = staticContext.statusCode
+  }
+
+  reply.code(code).type('text/html').send(responseHtml)
 })
 
 const port = Number.parseInt(process.env.PORT) || 3000
