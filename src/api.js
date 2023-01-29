@@ -1,5 +1,5 @@
 import fastify from 'fastify'
-import fastifyCors from 'fastify-cors'
+import fastifyCors from '@fastify/cors'
 import { authors } from './data/authors.js'
 
 const server = fastify({ logger: true }) // ①
