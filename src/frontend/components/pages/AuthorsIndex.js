@@ -3,7 +3,7 @@ import htm from 'htm'
 import { Link } from 'react-router-dom'
 import superagent from 'superagent'
 import { Header } from '../Header.js'
-import { authors } from '../../../data/authors.js'
+
 
 const html = htm.bind(react.createElement)
 
