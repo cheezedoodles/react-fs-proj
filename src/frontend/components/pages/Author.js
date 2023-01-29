@@ -13,7 +13,10 @@ export class Author extends React.Component {
     )
 
     if (!author) {
-      return html`<${FourOhFour} error="Author not found/>`
+      return html`<${FourOhFour} 
+        staticContext=${this.props.staticContext}
+        error="Author not found"
+      />`
     }
 
     return html`
