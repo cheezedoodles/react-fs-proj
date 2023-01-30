@@ -5,13 +5,14 @@ import reactServer from 'react-dom/server.js'
 import htm from 'htm'
 import fastify from 'fastify'
 import fastifyStatic from '@fastify/static'
-import { StaticRouter } from 'react-router-dom'
+import { StaticRouter, matchPath } from 'react-router-dom'
 import { App } from './frontend/App.js'
+import { routes } from './frontend/routes.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const html = htm.bind(react.createElement)
 
-const template = ({ content }) => `<!DOCTYPE html>
+const template = ({ content, serverData }) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -19,6 +20,9 @@ const template = ({ content }) => `<!DOCTYPE html>
   </head>
   <body>
     <div id="root">${content}</div>
+    ${serverData ? `<script type="text/javascript">
+  window.__STATIC_CONTEXT__=${JSON.stringify(serverData)}
+    </script>`: ''}
     <script type="text/javascript" src="/public/main.js"></script>
   </body>
 </html>`
