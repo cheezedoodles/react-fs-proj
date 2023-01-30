@@ -2,25 +2,20 @@ import react from 'react'
 import htm from 'htm'
 import { Link } from 'react-router-dom'
 import superagent from 'superagent'
+import { AsyncPage } from './AsyncPage.js'
 import { Header } from '../Header.js'
 
 const html = htm.bind(react.createElement)
 
-export class AuthorsIndex extends react.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      authors: [],
-      loading: true
-    }
+export class AuthorsIndex extends AsyncPage {
+  static async preloadAsyncData(props) {
+    const { body } = await superagent.get(
+      'http://localhost:3001/api/authors'
+    )
+    return { authors: body }
   }
 
-  async componentDidMount () {
-    const { body } = await superagent.get('http://localhost:3001/api/authors')
-    this.setState({ loading: false, authors: body })
-  }
-
-  render () {
+  render() {
     if (this.state.loading) {
       return html`<${Header}/><div>Loading ...</div>`
     }
