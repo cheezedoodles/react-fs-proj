@@ -1,38 +1,20 @@
 import react from 'react'
 import htm from 'htm'
 import superagent from 'superagent'
+import { AsyncPage } from './AsyncPage.js'
 import { FourOhFour } from './FourOhFour.js'
 import { Header } from '../Header.js'
 
 const html = htm.bind(react.createElement)
 
 export class Author extends react.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      author: null,
-      loading: true
-    }
-  }
-
-  async loadData () {
-    let author = null
-    this.setState({ loading: false, author })
-    try {
-      const { body } = await superagent.get(`http://localhost:3001/api/author/${this.props.match.params.authorId}`)
-      author = body
-    } catch (e) {}
-    this.setState({ loading: false, author })
-  }
-
-  componentDidMount () {
-    this.loadData()
-  }
-
-  componentDidUpdate (prevProps) {
-    if (prevProps.match.params.authorId !== this.props.match.params.authorId) {
-      this.loadData()
-    }
+  static async preloadAsyncData(props) {
+    const { body } = await superagent.get(
+      `http://localhost:3001/api/author/${
+        props.match.params.authorId
+      }`
+    )
+    return { author: body }
   }
 
   render () {
