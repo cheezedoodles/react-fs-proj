@@ -7,7 +7,7 @@ import { Header } from '../Header.js'
 
 const html = htm.bind(react.createElement)
 
-export class Author extends react.Component {
+export class Author extends AsyncPage {
   static async preloadAsyncData(props) {
     const { body } = await superagent.get(
       `http://localhost:3001/api/author/${
