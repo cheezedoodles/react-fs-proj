@@ -36,7 +36,33 @@ server.register(fastifyStatic, {
 
 server.get('*', async (req, reply) => {
   const location = req.raw.originalUrl
-  const staticContext = {}
+  let component
+  let match
+  for (const route of routes) {
+    component = route.component
+    match = matchPath(location, route)
+    if (match) {
+      break
+    }
+  }
+  let staticData
+  let staticError
+  let hasStaticContext = false
+  if (typeof component.preloadAsyncData === 'function') {
+    hasStaticContext = true
+    try {
+      const data = await component.preloadAsyncData({ match })
+      staticData = data
+    } catch (err) {
+      staticError = err
+    }
+  }
+  const staticContext = {
+    [location]: {
+      data: staticData,
+      err: staticError
+    }
+  }
   const serverApp = html` 
     <${StaticRouter}
       location=${location}
@@ -46,13 +72,13 @@ server.get('*', async (req, reply) => {
     </>
   `
   const content = reactServer.renderToString(serverApp)
-  const responseHtml = template({ content })
+  const serverData = hasStaticContext ? staticContext : null
+  const responseHtml = template({ content, serverData })
 
-  let code = 200
-  if (staticContext.statusCode) {
-    code = staticContext.statusCode
-  }
-
+  const code = staticContext.statusCode
+    ? staticContext.statusCode
+    : 200
+    
   reply.code(code).type('text/html').send(responseHtml)
 })
 
